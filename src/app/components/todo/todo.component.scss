@@ -1,10 +1,7 @@
 .todo-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 1rem;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
   h1 {
     text-align: center;
@@ -13,11 +10,27 @@
   }
 }
 
-.add-todo {
-  background: #f8f9fa;
-  padding: 1.5rem;
+.todo-layout {
+  display: grid;
+  grid-template-columns: 350px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.add-todo-panel {
+  background: white;
   border-radius: 8px;
-  margin-bottom: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  position: sticky;
+  top: 2rem;
+  height: fit-content;
+
+  h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
 
   .form-group {
     margin-bottom: 1rem;
@@ -71,6 +84,19 @@
   }
 }
 
+.todo-list-panel {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+
+  h2 {
+    color: #333;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+  }
+}
+
 .todo-list {
   .todo-item {
     background: #f8f9fa;
@@ -78,6 +104,10 @@
     margin-bottom: 1rem;
     padding: 1rem;
     transition: all 0.3s ease;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
 
     &.completada {
       opacity: 0.7;
@@ -151,5 +181,15 @@
         }
       }
     }
+  }
+}
+
+@media (max-width: 768px) {
+  .todo-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .add-todo-panel {
+    position: static;
   }
 } 
