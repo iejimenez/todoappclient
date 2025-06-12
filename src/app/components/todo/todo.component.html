@@ -3,63 +3,95 @@
   
   <div class="todo-layout">
     <div class="add-todo-panel">
-      <h2>Nueva Tarea</h2>
-      <form (ngSubmit)="addTodo()" #todoForm="ngForm">
+      <h2>{{ editingTodo ? 'Editar Tarea' : 'Nueva Tarea' }}</h2>
+      <form (ngSubmit)="editingTodo ? saveEdit() : addTodo()">
         <div class="form-group">
+          <label for="titulo">Título</label>
           <input
             type="text"
-            [(ngModel)]="newTodo.titulo"
+            id="titulo"
+            [ngModel]="editingTodo ? editingTodo.titulo : newTodo.titulo"
+            (ngModelChange)="editingTodo ? editingTodo.titulo = $event : newTodo.titulo = $event"
             name="titulo"
-            placeholder="Título de la tarea..."
+            placeholder="Título de la tarea"
             required
           />
         </div>
-        
+
         <div class="form-group">
+          <label for="descripcion">Descripción</label>
           <textarea
-            [(ngModel)]="newTodo.descripcion"
+            id="descripcion"
+            [ngModel]="editingTodo ? editingTodo.descripcion : newTodo.descripcion"
+            (ngModelChange)="editingTodo ? editingTodo.descripcion = $event : newTodo.descripcion = $event"
             name="descripcion"
-            placeholder="Descripción de la tarea..."
+            placeholder="Descripción de la tarea"
             rows="3"
           ></textarea>
         </div>
-        
+
         <div class="form-group">
-          <label>Fecha de vencimiento:</label>
+          <label for="fechaVencimiento">Fecha de Vencimiento</label>
           <input
-            type="datetime-local"
-            [(ngModel)]="newTodo.fechaVencimiento"
+            type="date"
+            id="fechaVencimiento"
+            [ngModel]="editingTodo ? editingTodo.fechaVencimiento : newTodo.fechaVencimiento"
+            (ngModelChange)="editingTodo ? editingTodo.fechaVencimiento = $event : newTodo.fechaVencimiento = $event"
             name="fechaVencimiento"
-            required
           />
         </div>
-        
-        <button type="submit" [disabled]="!todoForm.form.valid">Agregar Tarea</button>
+
+        <div class="form-group">
+          <label for="estado">Estado</label>
+          <select
+            id="estado"
+            [ngModel]="editingTodo ? editingTodo.estado : newTodo.estado"
+            (ngModelChange)="editingTodo ? editingTodo.estado = $event : newTodo.estado = $event"
+            name="estado"
+          >
+            <option [value]="TodoStatus.PENDIENTE">Pendiente</option>
+            <option [value]="TodoStatus.EN_PROGRESO">En Progreso</option>
+            <option [value]="TodoStatus.COMPLETADA">Completada</option>
+          </select>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            {{ editingTodo ? 'Guardar Cambios' : 'Agregar Tarea' }}
+          </button>
+          <button *ngIf="editingTodo" type="button" class="btn-secondary" (click)="cancelEdit()">
+            Cancelar
+          </button>
+        </div>
       </form>
     </div>
 
     <div class="todo-list-panel">
       <h2>Tareas</h2>
       <div class="todo-list">
-        <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completada]="todo.estado === 'completada'">
-          <div class="todo-header">
-            <input
-              type="checkbox"
-              [checked]="todo.estado === 'completada'"
-              (change)="toggleTodo(todo.id)"
-            />
+        <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completed]="todo.estado === TodoStatus.COMPLETADA">
+          <div class="todo-content">
             <h3>{{ todo.titulo }}</h3>
-            <button class="delete-btn" (click)="removeTodo(todo.id)">×</button>
-          </div>
-          
-          <div class="todo-details">
-            <p class="description">{{ todo.descripcion }}</p>
-            <div class="todo-meta">
-              <span class="fecha">Vence: {{ todo.fechaVencimiento | date:'short' }}</span>
-              <span class="estado" [class.completada]="todo.estado === 'completada'">
+            <p>{{ todo.descripcion }}</p>
+            <div class="todo-details">
+              <span class="todo-date">
+                Vence: {{ todo.fechaVencimiento | date:'shortDate' }}
+              </span>
+              <span class="todo-status" [class]="todo.estado.toLowerCase()">
                 {{ todo.estado }}
               </span>
             </div>
+          </div>
+          <div class="todo-actions">
+            <button class="btn-edit" (click)="editTodo(todo)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn-delete" (click)="removeTodo(todo.id)">
+              <i class="fas fa-trash"></i>
+            </button>
+            <button class="btn-toggle" (click)="toggleTodo(todo.id)">
+              <i class="fas" [class.fa-check]="todo.estado === TodoStatus.COMPLETADA" [class.fa-times]="todo.estado !== TodoStatus.COMPLETADA"></i>
+            </button>
           </div>
         </div>
       </div>
