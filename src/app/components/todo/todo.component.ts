@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Todo } from '../../models/todo.model';
+import { Todo, TodoStatus } from '../../models/todo.model';
 import { addTodo, removeTodo, toggleTodo } from '../../store/todo.actions';
 import { selectAllTodos } from '../../store/todo.selectors';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,12 @@ import { CommonModule } from '@angular/common';
 })
 export class TodoComponent implements OnInit {
   todos$: Observable<Todo[]>;
-  newTodoTitle: string = '';
+  newTodo = {
+    titulo: '',
+    descripcion: '',
+    fechaVencimiento: new Date(),
+    estado: 'pendiente' as TodoStatus
+  };
 
   constructor(private store: Store) {
     this.todos$ = this.store.select(selectAllTodos);
@@ -25,15 +30,14 @@ export class TodoComponent implements OnInit {
   ngOnInit(): void {}
 
   addTodo(): void {
-    if (this.newTodoTitle.trim()) {
+    if (this.newTodo.titulo.trim()) {
       const todo: Todo = {
         id: Date.now(),
-        title: this.newTodoTitle,
-        completed: false,
+        ...this.newTodo,
         createdAt: new Date()
       };
       this.store.dispatch(addTodo({ todo }));
-      this.newTodoTitle = '';
+      this.resetForm();
     }
   }
 
@@ -43,5 +47,14 @@ export class TodoComponent implements OnInit {
 
   toggleTodo(id: number): void {
     this.store.dispatch(toggleTodo({ id }));
+  }
+
+  private resetForm(): void {
+    this.newTodo = {
+      titulo: '',
+      descripcion: '',
+      fechaVencimiento: new Date(),
+      estado: 'pendiente'
+    };
   }
 } 

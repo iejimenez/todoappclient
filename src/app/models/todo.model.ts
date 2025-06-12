@@ -1,6 +1,10 @@
+export type TodoStatus = 'pendiente' | 'completada';
+
 export interface Todo {
   id: number;
-  title: string;
-  completed: boolean;
+  titulo: string;
+  descripcion: string;
+  fechaVencimiento: Date;
+  estado: TodoStatus;
   createdAt: Date;
 } 

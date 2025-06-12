@@ -1,5 +1,5 @@
 .todo-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 2rem auto;
   padding: 1rem;
   background: white;
@@ -14,75 +14,141 @@
 }
 
 .add-todo {
-  display: flex;
-  gap: 1rem;
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
   margin-bottom: 2rem;
 
-  input {
-    flex: 1;
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+  .form-group {
+    margin-bottom: 1rem;
 
-    &:focus {
-      outline: none;
-      border-color: #007bff;
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #666;
+    }
+
+    input[type="text"],
+    textarea,
+    input[type="datetime-local"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: #007bff;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
     }
   }
 
   button {
-    padding: 0.5rem 1rem;
+    width: 100%;
+    padding: 0.75rem;
     background: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
+    transition: background-color 0.3s ease;
 
     &:hover {
       background: #0056b3;
+    }
+
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
     }
   }
 }
 
 .todo-list {
   .todo-item {
-    display: flex;
-    align-items: center;
-    padding: 1rem;
     background: #f8f9fa;
-    border-radius: 4px;
-    margin-bottom: 0.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    padding: 1rem;
     transition: all 0.3s ease;
 
-    &.completed {
+    &.completada {
       opacity: 0.7;
-      .todo-title {
+      background: #e9ecef;
+
+      .todo-header h3 {
         text-decoration: line-through;
         color: #6c757d;
       }
     }
 
-    input[type="checkbox"] {
-      margin-right: 1rem;
+    .todo-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+
+      input[type="checkbox"] {
+        margin-right: 1rem;
+        transform: scale(1.2);
+      }
+
+      h3 {
+        flex: 1;
+        margin: 0;
+        font-size: 1.2rem;
+      }
+
+      .delete-btn {
+        background: none;
+        border: none;
+        color: #dc3545;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0 0.5rem;
+
+        &:hover {
+          color: #c82333;
+        }
+      }
     }
 
-    .todo-title {
-      flex: 1;
-      font-size: 1rem;
-    }
+    .todo-details {
+      padding-left: 2.2rem;
 
-    .delete-btn {
-      background: none;
-      border: none;
-      color: #dc3545;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0 0.5rem;
+      .description {
+        color: #666;
+        margin-bottom: 0.5rem;
+      }
 
-      &:hover {
-        color: #c82333;
+      .todo-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.9rem;
+        color: #666;
+
+        .fecha {
+          color: #dc3545;
+        }
+
+        .estado {
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          background: #ffc107;
+          color: #000;
+
+          &.completada {
+            background: #28a745;
+            color: white;
+          }
+        }
       }
     }
   }
