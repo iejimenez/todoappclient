@@ -1,59 +1,100 @@
-# TodoApp
+# Todo App - Aplicación de Gestión de Tareas
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.6.
+Esta es una aplicación web para gestionar tareas, desarrollada con Angular y .NET Core.
 
-## Development server
+## Requisitos Previos
 
-To start a local development server, run:
+Antes de comenzar, asegúrate de tener instalado:
 
+- [Node.js](https://nodejs.org/) (versión 14.x o superior)
+- [Angular CLI](https://angular.io/cli) (versión 14.x o superior)
+- [.NET Core SDK](https://dotnet.microsoft.com/download) (versión 9.0 o superior)
+- Un editor de código (recomendado: Visual Studio Code)
+
+## Pasos para Ejecutar el Proyecto
+
+### 1. Clonar el Repositorio
+
+```bash
+git clone https://github.com/iejimenez/todoappclient.git
+cd todoapp
+```
+
+### 2. Configurar el Backend (.NET Core)
+
+1. Clonar el Repositorio
+```bash
+git clone https://github.com/iejimenez/TodoAppApi.git
+```
+2. Seguir las intrucciones del repositorio del API
+
+El backend se ejecutará en `http://localhost:7067`
+
+### 3. Configurar el Frontend (Angular)
+
+1. Abre una nueva terminal y navega a la carpeta del frontend:
+```bash
+cd todoappclient
+```
+
+2. Instala las dependencias:
+```bash
+npm install
+```
+
+3. Ejecuta el proyecto:
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+El frontend se ejecutará en `http://localhost:4200`
 
-## Code scaffolding
+## Estructura del Proyecto
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```
+todoapp/
+├── TodoApp.API/          # Backend (.NET Core)
+└── todoappclient/        # Frontend (Angular)
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Características
 
-```bash
-ng generate --help
-```
+- Crear, editar y eliminar tareas
+- Marcar tareas como completadas
+- Validación de formularios
+- Interfaz responsiva
+- Animaciones suaves
 
-## Building
+## Tecnologías Utilizadas
 
-To build the project run:
+- **Frontend**:
+  - Angular 14
+  - TypeScript
+  - SCSS
+  - Font Awesome (iconos)
 
-```bash
-ng build
-```
+- **Backend**:
+  - .NET Core 9
+  - Entity Framework Core
+  - SQL Server
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Solución de Problemas
 
-## Running unit tests
+Si encuentras algún error:
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Asegúrate de que todas las dependencias estén instaladas correctamente
+2. Verifica que los puertos 4200 (frontend) y 7067 (backend) estén disponibles
+3. Comprueba que la cadena de conexión a la base de datos sea correcta
+4. Revisa los logs del servidor para más detalles
 
-```bash
-ng test
-```
+## Contribuir
 
-## Running end-to-end tests
+1. Haz un Fork del proyecto
+2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
+3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
+4. Push a la rama (`git push origin feature/AmazingFeature`)
+5. Abre un Pull Request
 
-For end-to-end (e2e) testing, run:
+## Licencia
 
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
