@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { TodoState } from './todo.reducer';
 
-export const selectTodoState = (state: any) => state.todos;
+export const selectTodoState = (state: { todos: TodoState }) => state.todos;
 
 export const selectAllTodos = createSelector(
   selectTodoState,

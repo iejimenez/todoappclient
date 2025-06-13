@@ -6,52 +6,52 @@
       <h2>{{ editingTodo ? 'Editar Tarea' : 'Nueva Tarea' }}</h2>
       <form (ngSubmit)="editingTodo ? saveEdit() : addTodo()">
         <div class="form-group">
-          <label for="titulo">Título</label>
+          <label for="title">Título</label>
           <input
             type="text"
-            id="titulo"
-            [ngModel]="editingTodo ? editingTodo.titulo : newTodo.titulo"
-            (ngModelChange)="editingTodo ? editingTodo.titulo = $event : newTodo.titulo = $event"
-            name="titulo"
+            id="title"
+            [ngModel]="editingTodo ? editingTodo.title : newTodo.title"
+            (ngModelChange)="editingTodo ? editingTodo.title = $event : newTodo.title = $event"
+            name="title"
             placeholder="Título de la tarea"
             required
           />
         </div>
 
         <div class="form-group">
-          <label for="descripcion">Descripción</label>
+          <label for="description">Descripción</label>
           <textarea
-            id="descripcion"
-            [ngModel]="editingTodo ? editingTodo.descripcion : newTodo.descripcion"
-            (ngModelChange)="editingTodo ? editingTodo.descripcion = $event : newTodo.descripcion = $event"
-            name="descripcion"
+            id="description"
+            [ngModel]="editingTodo ? editingTodo.description : newTodo.description"
+            (ngModelChange)="editingTodo ? editingTodo.description = $event : newTodo.description = $event"
+            name="description"
             placeholder="Descripción de la tarea"
             rows="3"
           ></textarea>
         </div>
 
         <div class="form-group">
-          <label for="fechaVencimiento">Fecha de Vencimiento</label>
+          <label for="expirationDate">Fecha de Vencimiento</label>
           <input
-            type="date"
-            id="fechaVencimiento"
-            [ngModel]="editingTodo ? editingTodo.fechaVencimiento : newTodo.fechaVencimiento"
-            (ngModelChange)="editingTodo ? editingTodo.fechaVencimiento = $event : newTodo.fechaVencimiento = $event"
-            name="fechaVencimiento"
+            type="datetime-local"
+            id="expirationDate"
+            [ngModel]="editingTodo ? editingTodo.expirationDate : newTodo.expirationDate"
+            (ngModelChange)="editingTodo ? editingTodo.expirationDate = $event : newTodo.expirationDate = $event"
+            name="expirationDate"
           />
         </div>
 
         <div class="form-group">
-          <label for="estado">Estado</label>
+          <label for="status">Estado</label>
           <select
-            id="estado"
-            [ngModel]="editingTodo ? editingTodo.estado : newTodo.estado"
-            (ngModelChange)="editingTodo ? editingTodo.estado = $event : newTodo.estado = $event"
-            name="estado"
+            id="status"
+            [ngModel]="editingTodo ? editingTodo.status : newTodo.status"
+            (ngModelChange)="editingTodo ? editingTodo.status = $event : newTodo.status = $event"
+            name="status"
           >
-            <option [value]="TodoStatus.PENDIENTE">Pendiente</option>
-            <option [value]="TodoStatus.EN_PROGRESO">En Progreso</option>
-            <option [value]="TodoStatus.COMPLETADA">Completada</option>
+            <option value="Pendiente">Pendiente</option>
+            <option value="En Proceso">En Proceso</option>
+            <option value="Completada">Completada</option>
           </select>
         </div>
 
@@ -71,20 +71,20 @@
     <div class="todo-list-panel">
       <h2>Tareas</h2>
       <div class="todo-list">
-        <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completed]="todo.estado === TodoStatus.COMPLETADA">
+        <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completed]="todo.status === 'Completada'">
           <div class="todo-content">
-            <h3>{{ todo.titulo }}</h3>
-            <p>{{ todo.descripcion }}</p>
+            <h3>{{ todo.title }}</h3>
+            <p>{{ todo.description }}</p>
             <div class="todo-details">
               <span class="todo-date">
                 <i class="far fa-calendar-alt"></i>
-                Vence: {{ todo.fechaVencimiento | date:'shortDate' }}
+                Vence: {{ todo.expirationDate | date:'short' }}
               </span>
-              <span class="todo-status" [class]="todo.estado.toLowerCase()">
-                <i class="fas" [class.fa-clock]="todo.estado === TodoStatus.PENDIENTE" 
-                   [class.fa-spinner]="todo.estado === TodoStatus.EN_PROGRESO"
-                   [class.fa-check-circle]="todo.estado === TodoStatus.COMPLETADA"></i>
-                {{ todo.estado }}
+              <span class="todo-status" [class]="todo.status.toLowerCase().replace(' ', '_')">
+                <i class="fas" [class.fa-clock]="todo.status === 'Pendiente'" 
+                   [class.fa-spinner]="todo.status === 'En Proceso'"
+                   [class.fa-check-circle]="todo.status === 'Completada'"></i>
+                {{ todo.status }}
               </span>
             </div>
           </div>
@@ -95,8 +95,8 @@
             <button class="btn-delete" (click)="removeTodo(todo.id)" title="Eliminar tarea">
               <i class="fas fa-trash-alt"></i>
             </button>
-            <button class="btn-toggle" (click)="toggleTodo(todo.id)" [title]="todo.estado === TodoStatus.COMPLETADA ? 'Marcar como pendiente' : 'Marcar como completada'">
-              <i class="fas" [class.fa-check]="todo.estado === TodoStatus.COMPLETADA" [class.fa-times]="todo.estado !== TodoStatus.COMPLETADA"></i>
+            <button class="btn-toggle" (click)="toggleTodo(todo.id)" [title]="todo.status === 'Completada' ? 'Marcar como pendiente' : 'Marcar como completada'">
+              <i class="fas" [class.fa-check]="todo.status === 'Completada'" [class.fa-times]="todo.status !== 'Completada'"></i>
             </button>
           </div>
         </div>

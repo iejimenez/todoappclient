@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Todo } from '../../models/todo.model';
-import { TodoStatus } from '../../models/todo-status.enum';
 import * as TodoActions from '../../store/todo.actions';
 import { selectAllTodos } from '../../store/todo.selectors';
 
@@ -18,15 +17,14 @@ import { selectAllTodos } from '../../store/todo.selectors';
 export class TodoComponent implements OnInit {
   todos$: Observable<Todo[]>;
   newTodo: Todo = {
-    id: 0,
-    titulo: '',
-    descripcion: '',
-    fechaVencimiento: new Date(),
-    estado: TodoStatus.PENDIENTE,
-    createdAt: new Date()
+    id: '',
+    title: '',
+    description: '',
+    expirationDate: new Date().toISOString(),
+    status: 'Pendiente',
+    createdAt: new Date().toISOString()
   };
   editingTodo: Todo | null = null;
-  TodoStatus = TodoStatus;
 
   constructor(private store: Store) {
     this.todos$ = this.store.select(selectAllTodos);
@@ -37,11 +35,11 @@ export class TodoComponent implements OnInit {
   }
 
   addTodo(): void {
-    if (this.newTodo.titulo.trim()) {
+    if (this.newTodo.title.trim()) {
       const todo: Todo = {
         ...this.newTodo,
-        id: Date.now(),
-        createdAt: new Date()
+        id: crypto.randomUUID(),
+        createdAt: new Date().toISOString()
       };
       this.store.dispatch(TodoActions.addTodo({ todo }));
       this.resetForm();
@@ -53,7 +51,7 @@ export class TodoComponent implements OnInit {
   }
 
   saveEdit(): void {
-    if (this.editingTodo && this.editingTodo.titulo.trim()) {
+    if (this.editingTodo && this.editingTodo.title.trim()) {
       this.store.dispatch(TodoActions.editTodo({ todo: this.editingTodo }));
       this.cancelEdit();
     }
@@ -63,22 +61,22 @@ export class TodoComponent implements OnInit {
     this.editingTodo = null;
   }
 
-  removeTodo(id: number): void {
+  removeTodo(id: string): void {
     this.store.dispatch(TodoActions.removeTodo({ id }));
   }
 
-  toggleTodo(id: number): void {
+  toggleTodo(id: string): void {
     this.store.dispatch(TodoActions.toggleTodo({ id }));
   }
 
   private resetForm(): void {
     this.newTodo = {
-      id: 0,
-      titulo: '',
-      descripcion: '',
-      fechaVencimiento: new Date(),
-      estado: TodoStatus.PENDIENTE,
-      createdAt: new Date()
+      id: '',
+      title: '',
+      description: '',
+      expirationDate: new Date().toISOString(),
+      status: 'Pendiente',
+      createdAt: new Date().toISOString()
     };
   }
 } 
