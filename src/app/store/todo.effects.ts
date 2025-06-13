@@ -60,12 +60,7 @@ export class TodoEffects {
       ofType(TodoActions.toggleTodo),
       mergeMap(({ id }) =>
         this.todoService.toggleTodo(id).pipe(
-          map(updatedTodo => {
-            if (!updatedTodo) {
-              throw new Error('No se pudo actualizar el estado de la tarea');
-            }
-            return TodoActions.toggleTodoSuccess({ todo: updatedTodo });
-          }),
+          map(updatedTodo => TodoActions.toggleTodoSuccess({ todo: updatedTodo })),
           catchError(error => of(TodoActions.toggleTodoFailure({ error: error.message })))
         )
       )

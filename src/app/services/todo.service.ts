@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError, of } from 'rxjs';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { Todo } from '../models/todo.model';
 
 @Injectable({
@@ -38,11 +38,19 @@ export class TodoService {
 
   toggleTodo(id: string): Observable<Todo> {
     return this.http.patch<Todo>(`${this.apiUrl}/${id}/toggle`, {}).pipe(
-      map(response => {
+      mergeMap(response => {
         if (!response) {
-          throw new Error('No se pudo actualizar el estado de la tarea');
+          return this.http.get<Todo[]>(this.apiUrl).pipe(
+            map(todos => {
+              const updatedTodo = todos.find(todo => todo.id === id);
+              if (!updatedTodo) {
+                throw new Error('No se pudo encontrar la tarea actualizada');
+              }
+              return updatedTodo;
+            })
+          );
         }
-        return response;
+        return of(response);
       }),
       catchError(this.handleError)
     );
