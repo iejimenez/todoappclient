@@ -18,11 +18,17 @@ RUN npm run build -- --configuration production
 # Stage 2: Serve the application with Nginx
 FROM nginx:alpine
 
+# Create necessary directories and set permissions
+RUN mkdir -p /tmp/nginx && \
+    chmod 777 /tmp/nginx && \
+    mkdir -p /var/cache/nginx && \
+    chmod 777 /var/cache/nginx
+
 # Copy the built application from the build stage
 COPY --from=build /app/dist/todo-app /usr/share/nginx/html
 
 # Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # Expose port 8080
 EXPOSE 8080
