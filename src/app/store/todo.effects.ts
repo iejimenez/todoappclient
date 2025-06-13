@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { map, mergeMap, catchError, switchMap } from 'rxjs/operators';
+import { map, mergeMap, catchError, tap } from 'rxjs/operators';
 import { TodoService } from '../services/todo.service';
 import * as TodoActions from './todo.actions';
 
@@ -10,10 +10,15 @@ export class TodoEffects {
   loadTodos$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TodoActions.loadTodos),
+      tap(() => console.log('Loading todos...')),
       mergeMap(() =>
         this.todoService.getTodos().pipe(
+          tap(todos => console.log('Todos loaded:', todos)),
           map(todos => TodoActions.loadTodosSuccess({ todos })),
-          catchError(error => of(TodoActions.loadTodosFailure({ error })))
+          catchError(error => {
+            console.error('Error loading todos:', error);
+            return of(TodoActions.loadTodosFailure({ error }));
+          })
         )
       )
     )

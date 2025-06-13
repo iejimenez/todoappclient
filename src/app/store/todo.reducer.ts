@@ -50,7 +50,7 @@ export const todoReducer = createReducer(
       todo.id === id
         ? {
             ...todo,
-            estado: todo.estado === TodoStatus.COMPLETADA ? TodoStatus.PENDIENTE : TodoStatus.COMPLETADA
+            status: todo.status === 'Completada' ? 'Pendiente' : 'Completada'
           }
         : todo
     )

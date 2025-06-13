@@ -5,32 +5,43 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Todo } from '../../models/todo.model';
 import * as TodoActions from '../../store/todo.actions';
-import { selectAllTodos } from '../../store/todo.selectors';
+import { selectAllTodos, selectTodoLoading, selectTodoError } from '../../store/todo.selectors';
+import { TodoService } from '../../services/todo.service';
+import { TodoState } from '../../store/todo.reducer';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
   imports: [CommonModule, FormsModule],
+  providers: [TodoService],
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.scss']
 })
 export class TodoComponent implements OnInit {
   todos$: Observable<Todo[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
   newTodo: Todo = {
     id: '',
     title: '',
     description: '',
-    expirationDate: new Date().toISOString(),
+    expirationDate: '',
     status: 'Pendiente',
     createdAt: new Date().toISOString()
   };
   editingTodo: Todo | null = null;
 
-  constructor(private store: Store) {
+  constructor(
+    private store: Store<{ todos: TodoState }>,
+    private todoService: TodoService
+  ) {
     this.todos$ = this.store.select(selectAllTodos);
+    this.loading$ = this.store.select(selectTodoLoading);
+    this.error$ = this.store.select(selectTodoError);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    console.log('Component initialized, dispatching loadTodos');
     this.store.dispatch(TodoActions.loadTodos());
   }
 
