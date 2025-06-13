@@ -1,59 +1,55 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Todo } from '../models/todo.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  private apiUrl = '/api/TodoTask';  // Cambiado a ruta relativa
+  private apiUrl = '/api/TodoTask';
 
   constructor(private http: HttpClient) {}
 
-  private handleError(error: HttpErrorResponse) {
-    console.error('Service error:', error);
-    return throwError(() => error);
-  }
-
   getTodos(): Observable<Todo[]> {
-    console.log('Service - Getting todos');
     return this.http.get<Todo[]>(this.apiUrl).pipe(
-      tap(todos => console.log('Service - Todos received:', todos)),
       catchError(this.handleError)
     );
   }
 
-  createTodo(todo: Todo): Observable<Todo> {
-    console.log('Service - Creating todo:', todo);
+  addTodo(todo: Todo): Observable<Todo> {
     return this.http.post<Todo>(this.apiUrl, todo).pipe(
-      tap(newTodo => console.log('Service - Todo created:', newTodo)),
       catchError(this.handleError)
     );
   }
 
   updateTodo(todo: Todo): Observable<Todo> {
-    console.log('Service - Updating todo:', todo);
     return this.http.put<Todo>(`${this.apiUrl}/${todo.id}`, todo).pipe(
-      tap(updatedTodo => console.log('Service - Todo updated:', updatedTodo)),
       catchError(this.handleError)
     );
   }
 
   deleteTodo(id: string): Observable<void> {
-    console.log('Service - Deleting todo:', id);
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      tap(() => console.log('Service - Todo deleted:', id)),
       catchError(this.handleError)
     );
   }
 
   toggleTodo(id: string): Observable<Todo> {
-    console.log('Service - Toggling todo:', id);
     return this.http.patch<Todo>(`${this.apiUrl}/${id}/toggle`, {}).pipe(
-      tap(toggledTodo => console.log('Service - Todo toggled:', toggledTodo)),
+      map(response => {
+        if (!response) {
+          throw new Error('No se pudo actualizar el estado de la tarea');
+        }
+        return response;
+      }),
       catchError(this.handleError)
     );
+  }
+
+  private handleError(error: any): Observable<never> {
+    console.error('An error occurred:', error);
+    return throwError(() => error.message || 'Error en el servidor');
   }
 } 

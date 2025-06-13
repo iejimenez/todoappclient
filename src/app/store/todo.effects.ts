@@ -10,15 +10,10 @@ export class TodoEffects {
   loadTodos$ = createEffect(() =>
     this.actions$.pipe(
       ofType(TodoActions.loadTodos),
-      tap(() => console.log('Loading todos...')),
       mergeMap(() =>
         this.todoService.getTodos().pipe(
-          tap(todos => console.log('Todos loaded:', todos)),
           map(todos => TodoActions.loadTodosSuccess({ todos })),
-          catchError(error => {
-            console.error('Error loading todos:', error);
-            return of(TodoActions.loadTodosFailure({ error }));
-          })
+          catchError(error => of(TodoActions.loadTodosFailure({ error: error.message })))
         )
       )
     )
@@ -28,9 +23,9 @@ export class TodoEffects {
     this.actions$.pipe(
       ofType(TodoActions.addTodo),
       mergeMap(({ todo }) =>
-        this.todoService.createTodo(todo).pipe(
+        this.todoService.addTodo(todo).pipe(
           map(newTodo => TodoActions.addTodoSuccess({ todo: newTodo })),
-          catchError(error => of(TodoActions.addTodoFailure({ error })))
+          catchError(error => of(TodoActions.addTodoFailure({ error: error.message })))
         )
       )
     )
@@ -42,7 +37,7 @@ export class TodoEffects {
       mergeMap(({ todo }) =>
         this.todoService.updateTodo(todo).pipe(
           map(updatedTodo => TodoActions.editTodoSuccess({ todo: updatedTodo })),
-          catchError(error => of(TodoActions.editTodoFailure({ error })))
+          catchError(error => of(TodoActions.editTodoFailure({ error: error.message })))
         )
       )
     )
@@ -54,7 +49,7 @@ export class TodoEffects {
       mergeMap(({ id }) =>
         this.todoService.deleteTodo(id).pipe(
           map(() => TodoActions.removeTodoSuccess({ id })),
-          catchError(error => of(TodoActions.removeTodoFailure({ error })))
+          catchError(error => of(TodoActions.removeTodoFailure({ error: error.message })))
         )
       )
     )
@@ -65,8 +60,13 @@ export class TodoEffects {
       ofType(TodoActions.toggleTodo),
       mergeMap(({ id }) =>
         this.todoService.toggleTodo(id).pipe(
-          map(updatedTodo => TodoActions.toggleTodoSuccess({ todo: updatedTodo })),
-          catchError(error => of(TodoActions.toggleTodoFailure({ error })))
+          map(updatedTodo => {
+            if (!updatedTodo) {
+              throw new Error('No se pudo actualizar el estado de la tarea');
+            }
+            return TodoActions.toggleTodoSuccess({ todo: updatedTodo });
+          }),
+          catchError(error => of(TodoActions.toggleTodoFailure({ error: error.message })))
         )
       )
     )

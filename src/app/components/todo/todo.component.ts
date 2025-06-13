@@ -95,7 +95,9 @@ export class TodoComponent implements OnInit {
   }
 
   removeTodo(id: string): void {
-    this.store.dispatch(TodoActions.removeTodo({ id }));
+    if (confirm('¿Estás seguro de que deseas eliminar esta tarea?')) {
+      this.store.dispatch(TodoActions.removeTodo({ id }));
+    }
   }
 
   toggleTodo(id: string): void {

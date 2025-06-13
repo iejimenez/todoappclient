@@ -1,115 +1,116 @@
 <div class="todo-container">
   <app-loading *ngIf="loading$ | async"></app-loading>
-  <h1>Lista de Tareas</h1>
-  
-  <div class="todo-layout">
-    <div class="add-todo-panel">
-      <h2>{{ editingTodo ? 'Editar Tarea' : 'Nueva Tarea' }}</h2>
-      <form [formGroup]="todoForm" (ngSubmit)="editingTodo ? saveEdit() : addTodo()">
-        <div class="form-group">
-          <label for="title">Título</label>
-          <input
-            type="text"
-            id="title"
-            formControlName="title"
-            placeholder="Título de la tarea"
-            [class.is-invalid]="(title?.invalid && (title?.dirty || title?.touched)) || (submitted && title?.invalid)"
-          />
-          <div class="error-message" *ngIf="(title?.invalid && (title?.dirty || title?.touched)) || (submitted && title?.invalid)">
-            <span *ngIf="title?.errors?.['required']">El título es requerido</span>
-            <span *ngIf="title?.errors?.['minlength']">El título debe tener al menos 3 caracteres</span>
-            <span *ngIf="title?.errors?.['maxlength']">El título no puede tener más de 100 caracteres</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="description">Descripción</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            placeholder="Descripción de la tarea"
-            rows="3"
-            [class.is-invalid]="(description?.invalid && (description?.dirty || description?.touched)) || (submitted && description?.invalid)"
-          ></textarea>
-          <div class="error-message" *ngIf="(description?.invalid && (description?.dirty || description?.touched)) || (submitted && description?.invalid)">
-            <span *ngIf="description?.errors?.['required']">La descripción es requerida</span>
-            <span *ngIf="description?.errors?.['minlength']">La descripción debe tener al menos 10 caracteres</span>
-            <span *ngIf="description?.errors?.['maxlength']">La descripción no puede tener más de 500 caracteres</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="expirationDate">Fecha de Vencimiento</label>
-          <input
-            type="datetime-local"
-            id="expirationDate"
-            formControlName="expirationDate"
-            [class.is-invalid]="(expirationDate?.invalid && (expirationDate?.dirty || expirationDate?.touched)) || (submitted && expirationDate?.invalid)"
-          />
-          <div class="error-message" *ngIf="(expirationDate?.invalid && (expirationDate?.dirty || expirationDate?.touched)) || (submitted && expirationDate?.invalid)">
-            <span *ngIf="expirationDate?.errors?.['required']">La fecha de vencimiento es requerida</span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="status">Estado</label>
-          <select
-            id="status"
-            formControlName="status"
-            [class.is-invalid]="(status?.invalid && (status?.dirty || status?.touched)) || (submitted && status?.invalid)"
-          >
-            <option value="Pendiente">Pendiente</option>
-            <option value="En Proceso">En Proceso</option>
-            <option value="Completada">Completada</option>
-          </select>
-          <div class="error-message" *ngIf="(status?.invalid && (status?.dirty || status?.touched)) || (submitted && status?.invalid)">
-            <span *ngIf="status?.errors?.['required']">El estado es requerido</span>
-          </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">
-            <i class="fas" [class.fa-save]="editingTodo" [class.fa-plus]="!editingTodo"></i>
-            {{ editingTodo ? 'Guardar Cambios' : 'Agregar Tarea' }}
-          </button>
-          <button *ngIf="editingTodo" type="button" class="btn-secondary" (click)="cancelEdit()">
-            <i class="fas fa-times"></i>
-            Cancelar
-          </button>
-        </div>
-      </form>
-    </div>
-
-    <div class="todo-list-panel">
-      <h2>Tareas</h2>
-      <div class="todo-list">
-        <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completed]="todo.status === 'Completada'">
-          <div class="todo-content">
-            <h3>{{ todo.title }}</h3>
-            <p>{{ todo.description }}</p>
-            <div class="todo-details">
-              <span class="todo-date">
-                <i class="far fa-calendar-alt"></i>
-                Vence: {{ todo.expirationDate | date:'short' }}
-              </span>
-              <span class="todo-status" [class]="todo.status.toLowerCase().replace(' ', '_')">
-                <i class="fas" [class.fa-clock]="todo.status === 'Pendiente'" 
-                   [class.fa-spinner]="todo.status === 'En Proceso'"
-                   [class.fa-check-circle]="todo.status === 'Completada'"></i>
-                {{ todo.status }}
-              </span>
+  <div class="content-wrapper" [class.loading]="loading$ | async">
+    <h1>Lista de Tareas</h1>
+    
+    <div class="todo-layout">
+      <div class="add-todo-panel">
+        <h2>{{ editingTodo ? 'Editar Tarea' : 'Nueva Tarea' }}</h2>
+        <form [formGroup]="todoForm" (ngSubmit)="editingTodo ? saveEdit() : addTodo()">
+          <div class="form-group">
+            <label for="title">Título</label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              placeholder="Título de la tarea"
+              [class.is-invalid]="(title?.invalid && (title?.dirty || title?.touched)) || (submitted && title?.invalid)"
+            />
+            <div class="error-message" *ngIf="(title?.invalid && (title?.dirty || title?.touched)) || (submitted && title?.invalid)">
+              <span *ngIf="title?.errors?.['required']">El título es requerido</span>
+              <span *ngIf="title?.errors?.['minlength']">El título debe tener al menos 3 caracteres</span>
+              <span *ngIf="title?.errors?.['maxlength']">El título no puede tener más de 100 caracteres</span>
             </div>
           </div>
-          <div class="todo-actions">
-            <button class="btn-edit" (click)="editTodo(todo)" title="Editar tarea">
-              <i class="fas fa-edit"></i>
+
+          <div class="form-group">
+            <label for="description">Descripción</label>
+            <textarea
+              id="description"
+              formControlName="description"
+              placeholder="Descripción de la tarea"
+              rows="3"
+              [class.is-invalid]="(description?.invalid && (description?.dirty || description?.touched)) || (submitted && description?.invalid)"
+            ></textarea>
+            <div class="error-message" *ngIf="(description?.invalid && (description?.dirty || description?.touched)) || (submitted && description?.invalid)">
+              <span *ngIf="description?.errors?.['required']">La descripción es requerida</span>
+              <span *ngIf="description?.errors?.['minlength']">La descripción debe tener al menos 10 caracteres</span>
+              <span *ngIf="description?.errors?.['maxlength']">La descripción no puede tener más de 500 caracteres</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="expirationDate">Fecha de Vencimiento</label>
+            <input
+              type="datetime-local"
+              id="expirationDate"
+              formControlName="expirationDate"
+              [class.is-invalid]="(expirationDate?.invalid && (expirationDate?.dirty || expirationDate?.touched)) || (submitted && expirationDate?.invalid)"
+            />
+            <div class="error-message" *ngIf="(expirationDate?.invalid && (expirationDate?.dirty || expirationDate?.touched)) || (submitted && expirationDate?.invalid)">
+              <span *ngIf="expirationDate?.errors?.['required']">La fecha de vencimiento es requerida</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Estado</label>
+            <select
+              id="status"
+              formControlName="status"
+              [class.is-invalid]="(status?.invalid && (status?.dirty || status?.touched)) || (submitted && status?.invalid)"
+            >
+              <option value="Pendiente">Pendiente</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Completada">Completada</option>
+            </select>
+            <div class="error-message" *ngIf="(status?.invalid && (status?.dirty || status?.touched)) || (submitted && status?.invalid)">
+              <span *ngIf="status?.errors?.['required']">El estado es requerido</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary" [disabled]="loading$ | async">
+              <i class="fas" [class.fa-save]="editingTodo" [class.fa-plus]="!editingTodo"></i>
+              {{ editingTodo ? 'Guardar Cambios' : 'Agregar Tarea' }}
             </button>
-            <button class="btn-delete" (click)="removeTodo(todo.id)" title="Eliminar tarea">
-              <i class="fas fa-trash-alt"></i>
+            <button *ngIf="editingTodo" type="button" class="btn-secondary" (click)="cancelEdit()" [disabled]="loading$ | async">
+              <i class="fas fa-times"></i>
+              Cancelar
             </button>
-            <button class="btn-toggle" (click)="toggleTodo(todo.id)" [title]="todo.status === 'Completada' ? 'Marcar como pendiente' : 'Marcar como completada'">
-              <i class="fas" [class.fa-check]="todo.status === 'Completada'" [class.fa-times]="todo.status !== 'Completada'"></i>
-            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="todo-list-panel">
+        <div class="todo-list">
+          <div *ngFor="let todo of todos$ | async" class="todo-item" [class.completed]="todo.status === 'Completada'">
+            <div class="todo-content">
+              <h3>{{ todo.title }}</h3>
+              <p>{{ todo.description }}</p>
+              <div class="todo-details">
+                <span class="todo-date">
+                  <i class="far fa-calendar-alt"></i>
+                  Vence: {{ todo.expirationDate | date:'short' }}
+                </span>
+                <span class="todo-status" [class]="todo.status.toLowerCase().replace(' ', '_')">
+                  <i class="fas" [class.fa-clock]="todo.status === 'Pendiente'" 
+                     [class.fa-spinner]="todo.status === 'En Proceso'"
+                     [class.fa-check-circle]="todo.status === 'Completada'"></i>
+                  {{ todo.status }}
+                </span>
+              </div>
+            </div>
+            <div class="todo-actions">
+              <button class="btn-edit" (click)="editTodo(todo)" title="Editar tarea" [disabled]="loading$ | async">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn-delete" (click)="removeTodo(todo.id)" title="Eliminar tarea" [disabled]="loading$ | async">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+              <button class="btn-toggle" (click)="toggleTodo(todo.id)" [title]="todo.status === 'Completada' ? 'Marcar como pendiente' : 'Marcar como completada'" [disabled]="loading$ | async">
+                <i class="fas" [class.fa-check]="todo.status === 'Completada'" [class.fa-times]="todo.status !== 'Completada'"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

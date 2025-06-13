@@ -6,7 +6,7 @@ import * as TodoActions from './todo.actions';
 export interface TodoState {
   todos: Todo[];
   loading: boolean;
-  error: any;
+  error: string | null;
 }
 
 export const initialState: TodoState = {
@@ -18,7 +18,7 @@ export const initialState: TodoState = {
 export const todoReducer = createReducer(
   initialState,
   // Load Todos
-  on(TodoActions.loadTodos, (state) => ({
+  on(TodoActions.loadTodos, state => ({
     ...state,
     loading: true,
     error: null
@@ -26,16 +26,17 @@ export const todoReducer = createReducer(
   on(TodoActions.loadTodosSuccess, (state, { todos }) => ({
     ...state,
     todos,
-    loading: false
+    loading: false,
+    error: null
   })),
   on(TodoActions.loadTodosFailure, (state, { error }) => ({
     ...state,
-    error,
-    loading: false
+    loading: false,
+    error
   })),
 
   // Add Todo
-  on(TodoActions.addTodo, (state) => ({
+  on(TodoActions.addTodo, state => ({
     ...state,
     loading: true,
     error: null
@@ -43,16 +44,17 @@ export const todoReducer = createReducer(
   on(TodoActions.addTodoSuccess, (state, { todo }) => ({
     ...state,
     todos: [...state.todos, todo],
-    loading: false
+    loading: false,
+    error: null
   })),
   on(TodoActions.addTodoFailure, (state, { error }) => ({
     ...state,
-    error,
-    loading: false
+    loading: false,
+    error
   })),
 
   // Edit Todo
-  on(TodoActions.editTodo, (state) => ({
+  on(TodoActions.editTodo, state => ({
     ...state,
     loading: true,
     error: null
@@ -60,16 +62,17 @@ export const todoReducer = createReducer(
   on(TodoActions.editTodoSuccess, (state, { todo }) => ({
     ...state,
     todos: state.todos.map(t => t.id === todo.id ? todo : t),
-    loading: false
+    loading: false,
+    error: null
   })),
   on(TodoActions.editTodoFailure, (state, { error }) => ({
     ...state,
-    error,
-    loading: false
+    loading: false,
+    error
   })),
 
   // Remove Todo
-  on(TodoActions.removeTodo, (state) => ({
+  on(TodoActions.removeTodo, state => ({
     ...state,
     loading: true,
     error: null
@@ -77,28 +80,33 @@ export const todoReducer = createReducer(
   on(TodoActions.removeTodoSuccess, (state, { id }) => ({
     ...state,
     todos: state.todos.filter(todo => todo.id !== id),
-    loading: false
+    loading: false,
+    error: null
   })),
   on(TodoActions.removeTodoFailure, (state, { error }) => ({
     ...state,
-    error,
-    loading: false
+    loading: false,
+    error
   })),
 
   // Toggle Todo
-  on(TodoActions.toggleTodo, (state) => ({
+  on(TodoActions.toggleTodo, state => ({
     ...state,
     loading: true,
     error: null
   })),
-  on(TodoActions.toggleTodoSuccess, (state, { todo }) => ({
-    ...state,
-    todos: state.todos.map(t => t.id === todo.id ? todo : t),
-    loading: false
-  })),
+  on(TodoActions.toggleTodoSuccess, (state, { todo }) => {
+    if (!todo) return state;
+    return {
+      ...state,
+      todos: state.todos.map(t => t.id === todo.id ? todo : t),
+      loading: false,
+      error: null
+    };
+  }),
   on(TodoActions.toggleTodoFailure, (state, { error }) => ({
     ...state,
-    error,
-    loading: false
+    loading: false,
+    error
   }))
 ); 
