@@ -17,6 +17,7 @@ export const initialState: TodoState = {
 
 export const todoReducer = createReducer(
   initialState,
+  // Load Todos
   on(TodoActions.loadTodos, (state) => ({
     ...state,
     loading: true,
@@ -32,27 +33,72 @@ export const todoReducer = createReducer(
     error,
     loading: false
   })),
-  on(TodoActions.addTodo, (state, { todo }) => ({
+
+  // Add Todo
+  on(TodoActions.addTodo, (state) => ({
     ...state,
-    todos: [...state.todos, todo]
+    loading: true,
+    error: null
   })),
-  on(TodoActions.editTodo, (state, { todo }) => ({
+  on(TodoActions.addTodoSuccess, (state, { todo }) => ({
     ...state,
-    todos: state.todos.map(t => t.id === todo.id ? todo : t)
+    todos: [...state.todos, todo],
+    loading: false
   })),
-  on(TodoActions.removeTodo, (state, { id }) => ({
+  on(TodoActions.addTodoFailure, (state, { error }) => ({
     ...state,
-    todos: state.todos.filter(todo => todo.id !== id)
+    error,
+    loading: false
   })),
-  on(TodoActions.toggleTodo, (state, { id }) => ({
+
+  // Edit Todo
+  on(TodoActions.editTodo, (state) => ({
     ...state,
-    todos: state.todos.map(todo =>
-      todo.id === id
-        ? {
-            ...todo,
-            status: todo.status === 'Completada' ? 'Pendiente' : 'Completada'
-          }
-        : todo
-    )
+    loading: true,
+    error: null
+  })),
+  on(TodoActions.editTodoSuccess, (state, { todo }) => ({
+    ...state,
+    todos: state.todos.map(t => t.id === todo.id ? todo : t),
+    loading: false
+  })),
+  on(TodoActions.editTodoFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  })),
+
+  // Remove Todo
+  on(TodoActions.removeTodo, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+  on(TodoActions.removeTodoSuccess, (state, { id }) => ({
+    ...state,
+    todos: state.todos.filter(todo => todo.id !== id),
+    loading: false
+  })),
+  on(TodoActions.removeTodoFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
+  })),
+
+  // Toggle Todo
+  on(TodoActions.toggleTodo, (state) => ({
+    ...state,
+    loading: true,
+    error: null
+  })),
+  on(TodoActions.toggleTodoSuccess, (state, { todo }) => ({
+    ...state,
+    todos: state.todos.map(t => t.id === todo.id ? todo : t),
+    loading: false
+  })),
+  on(TodoActions.toggleTodoFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
   }))
 ); 

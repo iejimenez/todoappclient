@@ -8,11 +8,12 @@ import * as TodoActions from '../../store/todo.actions';
 import { selectAllTodos, selectTodoLoading, selectTodoError } from '../../store/todo.selectors';
 import { TodoService } from '../../services/todo.service';
 import { TodoState } from '../../store/todo.reducer';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-todo',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LoadingComponent],
   providers: [TodoService],
   templateUrl: './todo.component.html',
   styleUrls: ['./todo.component.scss']
