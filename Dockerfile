@@ -25,7 +25,7 @@ RUN mkdir -p /tmp/nginx && \
     chmod 777 /var/cache/nginx
 
 # Copy the built application from the build stage
-COPY --from=build /app/dist/todo-app /usr/share/nginx/html
+COPY --from=build /app/dist/todo-app/browser /usr/share/nginx/html
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
