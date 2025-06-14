@@ -3,7 +3,7 @@ import { tap } from 'rxjs/operators';
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   // URL base de la API
-  const apiUrl = 'https://todoappapi-690260275830.northamerica-northeast2.run.app/';
+  const apiUrl = 'hhttps://localhost:7067';
 
   console.log('Interceptor - Original request:', {
     url: req.url,

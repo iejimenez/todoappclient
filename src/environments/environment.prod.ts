@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:7067/api/TodoTask'  // Puerto 7067 para producción
+  apiUrl: 'https://todoappapi-690260275830.northamerica-northeast2.run.app'  
 }; 
